@@ -1,3 +1,9 @@
+/* start button */
+
+.startbutton {
+  border-radius: 3px;
+}
+
 /* game board table */
 
 #board td {

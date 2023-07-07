@@ -7,13 +7,16 @@
  * board fills (tie)
  */
 
-
+const startButton = document.getElementById('startbutton');
+startButton.addEventListener('click', () => {
+  new Game(6,7);
+});
 
 class Game {
   constructor(height, width) {
     this.y = height;
     this.x = width;
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this); //bind before makeHtmlBoard() runs!
     this.currPlayer = 1; // active player: 1 or 2
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.makeBoard();
@@ -157,7 +160,6 @@ class Game {
       }
     }
   }
-
 }
 
-let testGame = new Game(6, 7);
+
