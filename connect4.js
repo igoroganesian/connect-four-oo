@@ -33,8 +33,8 @@ class Player {
 
 class Game {
   constructor(height, width) {
-    this.y = height;
-    this.x = width;
+    this.height = height;
+    this.width = width;
     this.handleClick = this.handleClick.bind(this); //bind before makeHtmlBoard() runs!
     this.currPlayer = 1; // active player: 1 or 2
     this.gameOver = false;
@@ -48,8 +48,8 @@ class Game {
   */
 
   makeBoard() {
-    for (let y = 0; y < this.y; y++) {
-      this.board.push(Array.from({ length: this.x }));
+    for (let y = 0; y < this.height; y++) {
+      this.board.push(Array.from({ length: this.width }));
     }
   }
 
@@ -63,7 +63,7 @@ class Game {
     top.setAttribute('id', 'column-top');
     top.addEventListener('click', this.handleClick);
 
-    for (let x = 0; x < this.x; x++) {
+    for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
       headCell.setAttribute('id', x);
       top.append(headCell);
@@ -72,10 +72,10 @@ class Game {
     board.append(top);
 
     // make main part of board
-    for (let y = 0; y < this.y; y++) {
+    for (let y = 0; y < this.height; y++) {
       const row = document.createElement('tr');
 
-      for (let x = 0; x < this.x; x++) {
+      for (let x = 0; x < this.width; x++) {
         const cell = document.createElement('td');
         cell.setAttribute('id', `c-${y}-${x}`);
         row.append(cell);
@@ -88,7 +88,7 @@ class Game {
   /** findSpotForCol: given column x, return top empty y (null if filled) */
 
   findSpotForCol(x) {
-    for (let y = this.y - 1; y >= 0; y--) {
+    for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
         return y;
       }
@@ -155,16 +155,16 @@ class Game {
 
       return cells.every(
         ([y, x]) =>
-        y >= 0 &&
-        y < this.y &&
+        y >= 0 && //TODO: ???
+        y < this.height &&
         x >= 0 &&
-        x < this.x &&
+        x < this.width &&
         this.board[y][x] === this.currPlayer
       );
     }
 
-    for (let y = 0; y < this.y; y++) {
-      for (let x = 0; x < this.x; x++) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         // get "check list" of 4 cells (starting here) for each of the different
         // ways to win
         const horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
