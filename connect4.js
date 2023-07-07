@@ -16,6 +16,8 @@ const startButton = document.getElementById('startbutton');
 startButton.addEventListener('click', () => {
   const p1Color = p1Input.value;
   const p2Color = p2Input.value;
+  const playerOne = new Player(p1Color);
+  const playerTwo = new Player(p2Color);
   new Game(6,7);
 });
 
@@ -23,7 +25,7 @@ startButton.addEventListener('click', () => {
 
 class Player {
   constructor(color) {
-
+    this.color = color;
   }
 }
 
@@ -129,7 +131,7 @@ class Game {
     this.placeInTable(y, x);
 
     // check for win
-    if (checkForWin()) {
+    if (this.checkForWin()) {
       return this.endGame(`Player ${this.currPlayer} won!`);
     }
 
@@ -153,11 +155,11 @@ class Game {
 
       return cells.every(
         ([y, x]) =>
-          y >= 0 &&
-          y < this.y &&
-          x >= 0 &&
-          x < this.x &&
-          this.board[y][x] === this.currPlayer
+        y >= 0 &&
+        y < this.y &&
+        x >= 0 &&
+        x < this.x &&
+        this.board[y][x] === this.currPlayer
       );
     }
 
