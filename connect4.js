@@ -8,18 +8,20 @@
  */
 
 /** player color input boxes */
-const p1Input = document.getElementById('playerOne');
-const p2Input = document.getElementById('playerTwo');
+// const p1Color = document.getElementById('p1Color');
+// const p2Color = document.getElementById('p1Color');
+// const p1Color = p1Input.value;
+// const p2Color = p2Input.value;
 
 /** Start Button */ //TODO: disable duplicate gameboards on click
-const startButton = document.getElementById('startbutton');
-startButton.addEventListener('click', () => {
-  const p1Color = p1Input.value;
-  const p2Color = p2Input.value;
-  const playerOne = new Player(p1Color);
-  const playerTwo = new Player(p2Color);
-  new Game(6,7);
-});
+// const startButton = document.getElementById('startbutton');
+// startButton.addEventListener('click', () => {
+  // const p1Color = p1Input.value;
+  // const p2Color = p2Input.value;
+//   const p1 = new Player(p1Color);
+//   const p2 = new Player(p2Color);
+//   new Game(6,7, p1, p2);
+// });
 
 /** class for player generation: pulls color selection from html form */
 
@@ -32,13 +34,13 @@ class Player {
 /** class for game generation */
 
 class Game {
-  constructor(height, width) {
+  constructor(height, width, p1, p2) {
     this.height = height;
     this.width = width;
+    this.players = [p1, p2];
+    this.currPlayer = p1;
     this.handleClick = this.handleClick.bind(this); //bind before makeHtmlBoard() runs!
-    this.currPlayer = 1; // active player: 1 or 2
     this.gameOver = false;
-    this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.makeBoard();
     this.makeHtmlBoard();
   }
@@ -48,6 +50,7 @@ class Game {
   */
 
   makeBoard() {
+    this.board = []; //had to be here
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
@@ -101,7 +104,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`c-${y}-${x}`);
@@ -122,9 +125,7 @@ class Game {
 
     // get next spot in column (if none, ignore click)
     const y = this.findSpotForCol(x);
-    if (y === null) {
-      return;
-    }
+    if (y === null) return;
 
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer;
@@ -136,32 +137,32 @@ class Game {
     }
 
     // check for tie
-    if (board.every(row => row.every(cell => cell))) {
+    if (this.board.every(row => row.every(cell => cell))) {
       this.gameOver = true;
       return this.endGame('Tie!');
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer =
+      this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
   checkForWin() {
-    function _win(cells) {
-      // Check four cells to see if they're all color of current player
-      //  - cells: list of four (y, x) cells
-      //  - returns true if all are legal coordinates & all match currPlayer
-
-      return cells.every(
+     // Check four cells to see if they're all color of current player
+     //  - cells: list of four (y, x) cells
+     //  - returns true if all are legal coordinates & all match currPlayer
+    const _win = cells =>
+      cells.every(
         ([y, x]) =>
-        y >= 0 && //TODO: ???
+        y >= 0 &&
         y < this.height &&
         x >= 0 &&
         x < this.width &&
         this.board[y][x] === this.currPlayer
       );
-    }
+
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -182,4 +183,8 @@ class Game {
   }
 }
 
-
+document.getElementById('startbutton').addEventListener('click', function () {
+  const p1 = new Player(document.getElementById('p1Color').value);
+  const p2 = new Player(document.getElementById('p2Color').value);
+  new Game(6, 7, p1, p2);
+});
