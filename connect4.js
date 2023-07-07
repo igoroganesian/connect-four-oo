@@ -7,10 +7,27 @@
  * board fills (tie)
  */
 
+/** player color input boxes */
+const p1Input = document.getElementById('playerOne');
+const p2Input = document.getElementById('playerTwo');
+
+/** Start Button */ //TODO: disable duplicate gameboards on click
 const startButton = document.getElementById('startbutton');
 startButton.addEventListener('click', () => {
+  const p1Color = p1Input.value;
+  const p2Color = p2Input.value;
   new Game(6,7);
 });
+
+/** class for player generation: pulls color selection from html form */
+
+class Player {
+  constructor(color) {
+
+  }
+}
+
+/** class for game generation */
 
 class Game {
   constructor(height, width) {
@@ -18,11 +35,10 @@ class Game {
     this.x = width;
     this.handleClick = this.handleClick.bind(this); //bind before makeHtmlBoard() runs!
     this.currPlayer = 1; // active player: 1 or 2
+    this.gameOver = false;
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.makeBoard();
     this.makeHtmlBoard();
-
-
   }
 
   /** makeBoard: create in-JS board structure:
@@ -119,6 +135,7 @@ class Game {
 
     // check for tie
     if (board.every(row => row.every(cell => cell))) {
+      this.gameOver = true;
       return this.endGame('Tie!');
     }
 
@@ -155,6 +172,7 @@ class Game {
 
         // find winner (only checking each win-possibility as needed)
         if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+          this.gameOver = true;
           return true;
         }
       }
